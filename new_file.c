@@ -4,15 +4,8 @@
 * Projeto Final
 * Trabalho realizado por: João Devesa
 */
-
 char file_name[50];
 char* ext = ".dat";
-
-struct class_file {	
-		char class_name[50];
-		char students_name[100];
-		int students_number;
-}
 	
 newfile() {
 		
@@ -51,7 +44,6 @@ newfile() {
 	
 	fclose(nf);
 	system("pause");
-	
 	//NEW FILE EDIT MENU
 	newfile_edit_menu();
 }
@@ -77,7 +69,7 @@ newfile_edit_menu() {
 			break;
 		
 		case 2:
-			/*newfile_edit();*/
+			newfile_edit();
 			break;
 		
 		default:
@@ -88,9 +80,14 @@ newfile_edit_menu() {
 	}
 }
 
-/*newfile_edit() {
+struct class_file {	
+		char class_name[50];
+		char students_name[100];
+		int students_number;
+};
+
+newfile_edit() {
 	
-	main();
 	char string[20000];
 	
 	char* filename = malloc(strlen(file_name) + strlen(ext) + 1);
@@ -102,5 +99,5 @@ newfile_edit_menu() {
 	
 	printf("============ FILE INFORMATION ============\n");
 	printf(" %s\n", fgets(string, 20000, nf));
-}*/
+}
 
