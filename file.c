@@ -4,8 +4,9 @@
 * Projeto Final
 * Trabalho realizado por: João Devesa
 */
+
 char file_name[50];
-char* ext = ".dat";
+char* ext = ".bin";
 
 int input_number;
 
@@ -19,14 +20,28 @@ struct class_file {
 searchfile() {
 	
 	system("cls");
+	
 	printf(" ========== SEARCH FILE ==========\n");
 	printf(" | FILE NAME: ");
+	
+	//READ FILE
 	fflush(stdin);
 	gets(file_name);
+
+	char* filename = malloc(strlen(file_name) + strlen(ext) + 1);
+	sprintf(filename, "Files/%s%s", file_name, ext);
+	
+	free(filename);
+	FILE *nf;
+	
+	if (nf == NULL) {
+    	printf(" | File not found\n");
+    	printf(" =================================\n\n");
+    	
+		system("pause");
+   		return searchfile();
+    }
 	printf(" =================================\n");
-	
-	system("cls");
-	
 }
 
 //SEARCH FILE MENU
@@ -70,18 +85,28 @@ searchfile_menu() {
 //READ FILE
 readfile() {
 	
-	char string[20000];
+	char c;
 	
 	char* filename = malloc(strlen(file_name) + strlen(ext) + 1);
 	sprintf(filename, "Files/%s%s", file_name, ext);
 	
 	FILE *nf;
 	
-	nf = fopen(filename, "r");
+	nf = fopen(filename, "rb");
 	
 	system("cls");
-	printf("============ FILE INFORMATION ============\n");
-	printf(" %s\n", fgets(string, 20000, nf));
+	printf(" ============ FILE INFORMATION ============\n\n");
+	
+	c = fgetc(nf);
+    while (c != EOF)
+    {
+        printf ("%c", c);
+        c = fgetc(nf);
+    }
+  
+	printf("\n\n ==========================================\n");
+	system("pause");
+	main();
 }
 
 //CREATE FILE
@@ -90,8 +115,6 @@ newfile() {
 	setlocale(LC_ALL, "");
 	
 	//FILE NAME AND EXTENSION
-	FILE *nf;
-	
 	system("cls");
 	printf(" ============== NEW CLASS ==============\n");
 	printf(" | Class name: ");
@@ -104,12 +127,15 @@ newfile() {
 	sprintf(filename, "Files/%s%s", file_name, ext);
 	
 	//CREATE FILE
+	FILE *nf;
+	
 	nf = fopen(filename, "wb");
 	free(filename);
 	
 	if (nf == NULL) {
     	printf(" Problems in file creation\n");
     	printf(" =======================================\n\n");
+    	
     	system("pause");
    		return newfile();
     }
@@ -191,17 +217,25 @@ editfile() {
 
 deletefile() {
 	
-	searchfile();
+	system("cls");
 	
+	printf(" ================= DELETE FILE ================\n");
+	printf(" | FILE NAME: ");
+	
+	fflush(stdin);
+	gets(file_name);
+
 	char* filename = malloc(strlen(file_name) + strlen(ext) + 1);
 	sprintf(filename, "Files/%s%s", file_name, ext);
 	
-	system("cls");
+	free(filename);
+	
 	if(remove(filename) == 0) {
-		printf("File deleted successfully");
+		printf(" | File deleted successfull                   |\n");
 	}
 	else {
-		printf("Unable to delete de file");
+		printf(" | File not existing or not able to delete    |\n");
 	}
+	printf(" ==============================================\n");
 }
 
