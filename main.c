@@ -43,6 +43,7 @@ main() {
 	printf(" ================================\n");
 	
 	printf(" R: ");
+	fflush(stdin);
 	scanf("%d", &menu);
 	
 	switch(menu) {
