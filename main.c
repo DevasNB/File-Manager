@@ -35,9 +35,10 @@ main() {
 	//MENU
 	printf(" ============= MENU =============\n");
 	printf(" | [1] - Search Class           |\n");
-	printf(" | [2] - Create Class           |\n");
-	printf(" | [3] - Edit Class             |\n");
-	printf(" | [4] - Delete Class           |\n");
+	printf(" | [2] - List Class             |\n");
+	printf(" | [3] - Create Class           |\n");
+	printf(" | [4] - Update Class           |\n");
+	printf(" | [5] - Delete Class           |\n");
 	printf(" |                              |\n");
 	printf(" | [0] - Information            |\n");
 	printf(" ================================\n");
@@ -47,20 +48,22 @@ main() {
 	scanf("%d", &menu);
 	
 	switch(menu) {
-		case 1:;
+		case 1:
 			searchfile();
-			searchfile_menu();
 			break;
 		
 		case 2:
+			main();
+			break;
+		case 3:
 			newfile();
 			break;
 			
-		case 3:
-			editfile();
+		case 4:
+			updatefile();
 			break;
 		
-		case 4:
+		case 5:
 			deletefile();
 			break;
 			

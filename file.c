@@ -8,24 +8,21 @@
 char file_name[50];
 char* ext = ".bin";
 
-int input_number = 0;
-
 struct class_file {	
-	char student_name[100];
-	char student_number[10];
+	char student_name[50];
+	int student_number;
 };
-
 struct class_file cf;
 
 //SEARCH FILE
 searchfile() {
 	
-	system("cls");
+	int menu;
+	char c;
 	
+	system("cls");
 	printf(" ========== SEARCH FILE ==========\n");
 	printf(" | FILE NAME: ");
-	
-	//READ FILE
 	fflush(stdin);
 	gets(file_name);
 
@@ -33,33 +30,25 @@ searchfile() {
 	sprintf(filename, "Files/%s%s", file_name, ext);
 	
 	free(filename);
-	FILE *nf;
 	
+	FILE *nf;
 	nf = fopen(filename, "rb");
 	
 	if (nf == NULL) {
-    	printf(" | File not found\n");
+    	printf(" | File not found                |\n");
     	printf(" =================================\n\n");
     	
 		system("pause");
    		return searchfile();
     }
 	printf(" =================================\n");
-}
-
-//SEARCH FILE MENU
-searchfile_menu() {
-	
-	int menu;
-	
-	system("cls");
 	
 	//MENU
+	system("cls");
 	printf(" ======== SEARCH FILE MENU ========\n");
 	printf(" | [1] - Back to main             |\n");
 	printf(" | [2] - Open in Directory        |\n");
 	printf(" | [3] - Read File                |\n");
-	printf(" | [4] - Edit File                |\n");
 	printf(" ==================================\n");
 	
 	printf(" R: ");
@@ -76,47 +65,27 @@ searchfile_menu() {
 			break;
 			
 		case 3:
-			readfile();
-			break;
-		
-		case 4:
-			editfile();
+			system("cls");
+			printf(" ============ FILE INFORMATION ============\n\n");
 			
+			c = fgetc(nf);
+		    while (c != EOF){
+		        printf ("%c", c);
+		        c = fgetc(nf);
+		    }
+		    
+			printf("\n\n ==========================================\n");
+			system("pause");
+			main();
 			break;
 		
 		default:
 			printf("Choose a option in the menu");
 			system("pause");
 			
-			searchfile_menu();
+			searchfile();
 			break;
 	}
-}
-
-//READ FILE
-readfile() {
-	
-	char c;
-	
-	char* filename = malloc(strlen(file_name) + strlen(ext) + 1);
-	sprintf(filename, "Files/%s%s", file_name, ext);
-	
-	FILE *nf;
-	
-	nf = fopen(filename, "rb");
-	
-	system("cls");
-	printf(" ============ FILE INFORMATION ============\n\n");
-	
-	c = fgetc(nf);
-    while (c != EOF){
-        printf ("%c", c);
-        c = fgetc(nf);
-    }
-  
-	printf("\n\n ==========================================\n");
-	system("pause");
-	main();
 }
 
 //CREATE FILE
@@ -126,7 +95,9 @@ newfile() {
 	
 	int i, menu;
 	
-	char header[] = " CLASS: \n\n NANE: \t\t\t\t\t\t\t\t\tNUMBER:\n\n";
+	int input_number = 0;
+	
+	char header[] = " CLASS: \n\n NAME: \t\t\t\t\t\t\t\tNUMBER:\n\n";
 	char line[] = "____________________________________________________________________________________________________\n";
 	
 	//FILE NAME AND EXTENSION
@@ -144,8 +115,7 @@ newfile() {
 	free(filename);
 	
 	//CREATE FILE
-	FILE *nf;
-		
+	FILE *nf;	
 	nf = fopen(filename, "wb");
 	
 	if (nf == NULL) {
@@ -157,6 +127,7 @@ newfile() {
     }
 	printf(" =======================================\n\n");
 
+	fclose(nf);
 	//NEW FILE EDIT MENU
 	system("pause");
 	system("cls");
@@ -173,37 +144,42 @@ newfile() {
 	
 	switch(menu) {
 		case 1:
-			fclose(nf);
+			/*fclose(nf);*/
 			main();
 			break;
 		
 		case 2:
-			fwrite(&header, sizeof(header), 1, nf);
 			
 			system("cls");
 			printf(" ============ WRITE THE CLASS LIST ============\n");
 			printf(" | Number of students in the class: ");
 			scanf("%d", &input_number);
 			printf(" |\n");
-			for(i = 1; i <= input_number; i++) {
+			for(i = 0; i < input_number; i++) {
+				
+				nf = fopen(filename, "ab");
+				
+				/*fwrite(&header, sizeof(header), 1, nf);*/
+				
 				printf(" | Student name: ");
 				fflush(stdin);
 				gets(cf.student_name);
 				
-				fwrite(&cf.student_name, sizeof(struct class_file), 1, nf);
-				
 				printf(" | Student number: ");
 				fflush(stdin);
-				gets(cf.student_number);
-				
-				fwrite(&cf.student_number, sizeof(struct class_file), 1, nf);
+				scanf("%d", &cf.student_number);
 				
 				printf("\n");
-				fwrite(&line, sizeof(line), 1, nf);			
+				
+				fwrite(&cf, sizeof(struct class_file), 1, nf);
+				//fwrite(&line, sizeof(line), 1, nf);
+				fclose(nf);		
 			}
-			fclose(nf);
+			
+			
+			
 			system("cls");
-			printf(" File created and edited successfully\n");
+			printf(" File created and edited successfully\n\n");
 			system("pause");
 			main();
 			break;
@@ -219,18 +195,13 @@ newfile() {
 	}
 }
 
-editfile() {
+updatefile() {
 	
-	main();
-}
-
-deletefile() {
+	int i, rows = 0;
 	
 	system("cls");
-	
-	printf(" ================= DELETE FILE ================\n");
+	printf(" ========== UPDATE FILE ==========\n");
 	printf(" | FILE NAME: ");
-	
 	fflush(stdin);
 	gets(file_name);
 
@@ -239,17 +210,87 @@ deletefile() {
 	
 	free(filename);
 	
-	if(remove(filename) == 0) {
-		printf(" | File deleted successfull                   |\n");
+	FILE *uf;
+	uf = fopen(filename, "rb+");
+	
+	if (uf == NULL) {
+    	printf(" | File not found                |\n");
+    	printf(" =================================\n\n");
+    	
+		system("pause");
+   		return updatefile();
+    }
+	printf(" =================================\n");
+	
+	system("cls");
+	printf(" ================ UPDATE FILE ================\n");
+	printf(" | How many lines do you want to change: ");
+	fflush(stdin);
+	scanf("%d", &rows);
+	printf(" =============================================\n");
+	
+	for(i = 0; i < rows; i++) {
+		
+		system("cls");
+		printf(" ================ UPDATE FILE ================\n");
+		printf(" | Name of student: ");
+		fflush(stdin);
+		fscanf(uf, "%s", &cf.student_name);
+		
+		printf(" | Number of the same student: ");
+		fflush(stdin);
+		fscanf(uf, "%s", &cf.student_number);
+		
+		printf(" |                                           |\n");
+		
+		printf(" =============================================\n");
 	}
-	else {
-		printf(" | File not existing or not able to delete    |\n");
-		printf(" ==============================================\n");
-		sleep(1);
-		deletefile();
-	}
-	printf(" ==============================================\n");
-	sleep(1);
-	main();
+	
 }
 
+deletefile() {
+	
+	int i = 0, trys = 3;
+	
+	for (i = 0; i < 3; i++) {
+		
+		system("cls");
+		printf(" ================= DELETE FILE ================\n");
+		printf(" | FILE NAME: ");
+		
+		fflush(stdin);
+		gets(file_name);
+	
+		char* filename = malloc(strlen(file_name) + strlen(ext) + 1);
+		sprintf(filename, "Files/%s%s", file_name, ext);
+		
+		free(filename);
+		
+		if(remove(filename) == 0) {
+			printf(" | File deleted successfull                   |\n");
+			printf(" ==============================================\n");
+			
+			sleep(1);
+			main();
+		}
+		else {
+			printf(" | File not existing or not able to delete    |\n");
+			printf(" ==============================================\n\n");
+			
+			trys = trys - 1;
+			
+			if(trys == 0) {
+				printf("  Back to main!");
+			}
+			else {
+				printf("  %d more attemptions!", trys);
+			}
+			
+			
+			sleep(1);
+		}
+	}
+	sleep(1),
+	main();
+}
+	
