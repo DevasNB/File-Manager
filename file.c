@@ -8,14 +8,15 @@
 char file_name[50];
 char* ext = ".bin";
 
-struct class_file {	
-	char student_name[50];
-	int student_number;
+struct recipt {	
+	int number_receipt;
+	int nif;
+	float price;
 };
-struct class_file cf;
+struct recipt rec;
 
 //SEARCH FILE
-searchfile() {
+listfile() {
 	
 	int menu;
 	char c;
@@ -68,12 +69,13 @@ searchfile() {
 			system("cls");
 			printf(" ============ FILE INFORMATION ============\n\n");
 			
-			c = fgetc(nf);
-		    while (c != EOF){
-		        printf ("%c", c);
-		        c = fgetc(nf);
-		    }
-		    
+			while(fread(&rec, sizeof(rec), 1, nf)){
+				
+				printf(" | Number reciept: %d \n", rec.number_receipt);
+				printf(" | Quantidade de pecas: %d \n", rec.nif);
+				printf(" | Preco da peca: %.2f \n", rec.price);
+			}
+
 			printf("\n\n ==========================================\n");
 			system("pause");
 			main();
@@ -116,7 +118,7 @@ newfile() {
 	
 	//CREATE FILE
 	FILE *nf;	
-	nf = fopen(filename, "wb");
+	nf = fopen(filename, "ab");
 	
 	if (nf == NULL) {
     	printf(" Problems in file creation\n");
@@ -127,7 +129,6 @@ newfile() {
     }
 	printf(" =======================================\n\n");
 
-	fclose(nf);
 	//NEW FILE EDIT MENU
 	system("pause");
 	system("cls");
@@ -144,40 +145,30 @@ newfile() {
 	
 	switch(menu) {
 		case 1:
-			/*fclose(nf);*/
+			fclose(nf);
 			main();
 			break;
 		
 		case 2:
 			
 			system("cls");
-			printf(" ============ WRITE THE CLASS LIST ============\n");
-			printf(" | Number of students in the class: ");
-			scanf("%d", &input_number);
-			printf(" |\n");
-			for(i = 0; i < input_number; i++) {
+			printf(" ============ WRITE THE CLASS LIST ============\n");			
+			printf(" | Reciept number: ");
+			fflush(stdin);
+			scanf("%d", &rec.number_receipt);
 				
-				nf = fopen(filename, "ab");
-				
-				/*fwrite(&header, sizeof(header), 1, nf);*/
-				
-				printf(" | Student name: ");
-				fflush(stdin);
-				gets(cf.student_name);
-				
-				printf(" | Student number: ");
-				fflush(stdin);
-				scanf("%d", &cf.student_number);
-				
-				printf("\n");
-				
-				fwrite(&cf, sizeof(struct class_file), 1, nf);
-				//fwrite(&line, sizeof(line), 1, nf);
-				fclose(nf);		
-			}
+			printf(" | NIF number: ");
+			fflush(stdin);
+			scanf("%d", &rec.nif);
 			
+			printf(" | Price: ");
+			fflush(stdin);
+			scanf("%f", &rec.price);
 			
+			fwrite(&rec, sizeof(rec), 1, nf);
 			
+			fclose(nf);	
+					
 			system("cls");
 			printf(" File created and edited successfully\n\n");
 			system("pause");
@@ -196,8 +187,6 @@ newfile() {
 }
 
 updatefile() {
-	
-	int i, rows = 0;
 	
 	system("cls");
 	printf(" ========== UPDATE FILE ==========\n");
@@ -224,28 +213,10 @@ updatefile() {
 	
 	system("cls");
 	printf(" ================ UPDATE FILE ================\n");
-	printf(" | How many lines do you want to change: ");
+	printf(" | Reciept number: ");
 	fflush(stdin);
-	scanf("%d", &rows);
+	fscanf(uf, "%d", &rec.number_receipt);
 	printf(" =============================================\n");
-	
-	for(i = 0; i < rows; i++) {
-		
-		system("cls");
-		printf(" ================ UPDATE FILE ================\n");
-		printf(" | Name of student: ");
-		fflush(stdin);
-		fscanf(uf, "%s", &cf.student_name);
-		
-		printf(" | Number of the same student: ");
-		fflush(stdin);
-		fscanf(uf, "%s", &cf.student_number);
-		
-		printf(" |                                           |\n");
-		
-		printf(" =============================================\n");
-	}
-	
 }
 
 deletefile() {
