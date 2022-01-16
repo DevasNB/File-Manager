@@ -10,6 +10,7 @@
 struct recibos{
 	int numero_recibo;
 	char nome_pessoa[100];
+	char compras[200];
 	int nif;
 	int preco;
 };
@@ -138,13 +139,21 @@ inserir(){
 		printf(" | Digite o nome de cliente:         |\n");
 		printf(" | R: ");
 		
-		scanf("%s", &rec.nome_pessoa);
+		fflush(stdin);
+		gets(rec.nome_pessoa);
 		
 		printf(" |                                   |\n");
 		printf(" |Digite o nif de cliente:           |\n");
 		printf(" | R: ");
 		
 		scanf("%d", &rec.nif);
+		
+		printf(" |                                   |\n");
+		printf(" | Digite o que foi comprado:        |\n");
+		printf(" | R: ");
+		
+		fflush(stdin);
+		gets(rec.compras);
 		
 		printf(" |                                   |\n");
 		printf(" | Digite o preco da compra:         |\n");
@@ -216,6 +225,7 @@ listar(){
 		printf(" | Numero de recibo: %d \n", rec.numero_recibo);
 		printf(" | Nome de cliente: %s \n", rec.nome_pessoa);
 		printf(" | NIF de cliente: %d \n", rec.nif);
+		printf(" | Compra: %s \n", rec.compras);
 		printf(" | Preco da compra: %d \n", rec.preco);
 		
 		printf(" |                                    |\n");
@@ -281,13 +291,18 @@ pesquisar(){
 			printf(" | Numero de recibo: %d \n", rec.numero_recibo);
 			printf(" | Nome de cliente: %s \n", rec.nome_pessoa);
 			printf(" | NIF de cliente: %d \n", rec.nif);
+			printf(" | Compra: %s \n", rec.compras);
 			printf(" | Preco da compra: %d \n", rec.preco);
 		
 			printf(" |                                    |\n");
-			printf(" ======================================\n");
+			printf(" ======================================\n\n");
 		
 			check = 1;
-			break;
+			
+			fclose(recibo);
+			system("pause");
+			
+			main();
 		}
 	}
 	
@@ -374,13 +389,21 @@ atualizar(){
 			printf(" | Digite o nome de cliente:         |\n");
 			printf(" | R: ");
 			
-			scanf("%s", &rec.nome_pessoa);
+			fflush(stdin);
+			gets(rec.nome_pessoa);
 			
 			printf(" |                                   |\n");
 			printf(" | Digite o nif de cliente:          |\n");
 			printf(" | R: ");
 			
 			scanf("%d", &rec.nif);
+			
+			printf(" |                                   |\n");
+			printf(" | Digite o que foi comprado:        |\n");
+			printf(" | R: ");
+			
+			fflush(stdin);
+			gets(rec.compras);
 			
 			printf(" |                                   |\n");
 			printf(" | Digite o preco da compra:         |\n");
