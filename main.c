@@ -10,9 +10,9 @@
 struct recibos{
 	int numero_recibo;
 	char nome_pessoa[100];
-	char compras[200];
+	char compras[2000];
 	int nif;
-	int preco;
+	float preco;
 };
 struct recibos rec;
 
@@ -38,7 +38,8 @@ main() {
 	printf("\n\n\t\t\t\t       | CLICA EM QUALQUER TECLA PARA CONTINUAR  | \n\n\n\n");
 	
 	system("pause");
-	sleep(1);
+	
+	sleep(1); //SE AS FUNÇOES SLEEP N FUNCIONAREM CORRETAMENTE, ALTERARAR PARA 1000 OU ELIMINAR LINHA DE CÓDIGO, EXITEM MAIS SLEEPS NO CÓDIGO
 	
 	system("cls");
 		
@@ -55,9 +56,9 @@ main() {
 	printf(" | [7]: Sair                          |\n");
 	printf(" |                                    |\n");
 	printf(" | [0]: Informação                    |\n");
-	printf(" | R: ");
 	
 	fflush(stdin);
+	printf(" | R: ");
 	scanf("%d", &op);
 	
 	printf(" |                                    |\n");
@@ -90,10 +91,40 @@ main() {
 			break;
 			
 		case 7:
+			system("cls");
+			printf(" ======================================\n");
+			printf(" |                                    |\n");
+			printf(" | OBRIGADO! VOLTA SEMPRE! :)         |\n");
+			printf(" |                                    |\n");
+			printf(" ======================================\n");
+			
 			system("exit");
 			return;
 			
 		case 0:
+			system("cls");
+			printf("                                     INFORMAÇÃO\n");
+			printf(" ====================================================================================\n");
+			printf(" |                                                                                  |\n");
+			printf(" | O objetivo deste trabalho foi criar um programa de registo e consulta de recibos |\n");
+			printf(" | de vendas, onde o utilizador regista as vendas efetuadas ao logo do tempo,       |\n");
+			printf(" | permitindo deste modo acompanhar as transações financeiras recebidas e as        |\n");
+			printf(" | entradas de caixa de determinada loja. No recibo é registado o número do recibo, |\n");
+			printf(" | o nome do comprador (cliente), o NIF do comprador, o que comprou, quanto         |\n");
+			printf(" | custou e o valor da compra.                                                      |\n");
+			printf(" |                                                                                  |\n");
+			printf(" | O programa permite, através de um menu, inserir, listar, pesquisar, atualizar,   |\n");
+			printf(" | eliminar recibos de vendas permitindo ainda abrir a localização do ficheiro no   |\n");
+			printf(" | diretório. Relativamente ao ponto de informação no menu, este permite ao         |\n");
+			printf(" | utilizador conhecer o programa.                                                  |\n");
+			printf(" |                                                                                  |\n");
+			printf(" | Trabalho realizado por: João Devesa                                              |\n");
+			printf(" | Nº de aluno: 2455                                                                |\n");
+			printf(" | 1ºano Licenciatura Engenharia Informática | ISTEC                                |\n");
+			printf(" |                                                                                  |\n");
+			printf(" ====================================================================================\n\n");
+			
+			system("pause");
 			main();
 			break;
 			
@@ -111,6 +142,8 @@ main() {
 }
 
 inserir(){
+	
+	setlocale(LC_ALL, "");
 	
 	FILE *recibo;
 	
@@ -143,7 +176,7 @@ inserir(){
 		gets(rec.nome_pessoa);
 		
 		printf(" |                                   |\n");
-		printf(" |Digite o nif de cliente:           |\n");
+		printf(" | Digite o nif de cliente:          |\n");
 		printf(" | R: ");
 		
 		scanf("%d", &rec.nif);
@@ -159,14 +192,27 @@ inserir(){
 		printf(" | Digite o preco da compra:         |\n");
 		printf(" | R: ");
 		
-		scanf("%d", &rec.preco);
+		scanf("%f", &rec.preco);
 		
 		printf(" |                                   |\n");
 		printf(" =====================================\n");
 		
-		fwrite(&rec, sizeof(rec), 1, recibo);
+		if(rec.nif >= 100000000 && rec.nif <= 999999999) {
+			fwrite(&rec, sizeof(rec), 1, recibo);
+		}
+		else {
+			printf(" =====================================\n");
+			printf(" |                                   |\n");
+			printf(" | O NIF INSERIDO NÃO CONTÉM 9       |\n");
+			printf(" | DIGITOS                           |\n");
+			printf(" |                                   |\n");
+			printf(" =====================================\n\n");
+			system("pause");
+			
+			inserir();
+		}
 		
-		sleep(1);
+		
 		system("cls");
 		
 		printf("                  MENU\n");
@@ -197,6 +243,8 @@ inserir(){
 
 listar(){
 	
+	setlocale(LC_ALL, "");
+	
 	int check = 0;
 	
 	FILE *recibo;
@@ -226,7 +274,7 @@ listar(){
 		printf(" | Nome de cliente: %s \n", rec.nome_pessoa);
 		printf(" | NIF de cliente: %d \n", rec.nif);
 		printf(" | Compra: %s \n", rec.compras);
-		printf(" | Preco da compra: %d \n", rec.preco);
+		printf(" | Preco da compra: %.2f \n", rec.preco);
 		
 		printf(" |                                    |\n");
 		printf(" ======================================\n");
@@ -250,8 +298,10 @@ listar(){
 
 pesquisar(){
 	
+	setlocale(LC_ALL, "");
+	
 	int num;
-	int check = 0, tentativas = 3;
+	int check = 0;
 	
 	FILE *recibo;
 	
@@ -292,7 +342,7 @@ pesquisar(){
 			printf(" | Nome de cliente: %s \n", rec.nome_pessoa);
 			printf(" | NIF de cliente: %d \n", rec.nif);
 			printf(" | Compra: %s \n", rec.compras);
-			printf(" | Preco da compra: %d \n", rec.preco);
+			printf(" | Preco da compra: %.2f \n", rec.preco);
 		
 			printf(" |                                    |\n");
 			printf(" ======================================\n\n");
@@ -307,42 +357,25 @@ pesquisar(){
 	}
 	
 	if(check == 0){
-		if(tentativas == 0) {
 			
-			system("cls");
-			printf(" ======================================\n");
-			printf(" |                                    |\n");
-			printf(" | RECIBO NUMERO %d NÃO EXISTE \n", num);
-			printf(" | A VOLTAR PARA O INICIO             |\n");
-			printf(" |                                    |\n");
-			printf(" ======================================\n\n");
+		system("cls");
+		printf(" ======================================\n");
+		printf(" |                                    |\n");
+		printf(" | RECIBO NUMERO %d NÃO EXISTE \n", num);
+		printf(" | A VOLTAR PARA O INICIO             |\n");
+		printf(" |                                    |\n");
+		printf(" ======================================\n\n");
 			
-			fclose(recibo);
-			sleep(1);
-			system("cls");
-			main();
-		}
-		else {
-			
-			tentativas = tentativas - 1;
-			
-			system("cls");
-			printf(" ======================================\n");
-			printf(" |                                    |\n");
-			printf(" | RECIBO NUMERO %d NÃO EXISTE \n", num);
-			printf(" | %d TENTATIVAS RESTANTES             |\n", tentativas);
-			printf(" |                                    |\n");
-			printf(" ======================================\n\n");
-			
-			fclose(recibo);
-			
-			system("pause");
-			pesquisar();
-		}
+		fclose(recibo);
+		sleep(1);
+		system("cls");
+		main();
 	}
 }
 
 atualizar(){
+	
+	setlocale(LC_ALL, "");
 	
 	FILE *recibo;
 	
@@ -409,7 +442,7 @@ atualizar(){
 			printf(" | Digite o preco da compra:         |\n");
 			printf(" | R: ");
 			
-			scanf("%d", &rec.preco);
+			scanf("%.2f", &rec.preco);
 			
 			printf(" |                                   |\n");
 			printf(" =====================================\n");
@@ -442,10 +475,13 @@ atualizar(){
 
 	fclose(recibo);		
 	system("pause");
-	system("cls");
+	
+	main();
 }
 
 eliminar(){
+	
+	setlocale(LC_ALL, "");
 	
 	FILE *recibo;
 	FILE *backup;
